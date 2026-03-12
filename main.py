@@ -51,9 +51,7 @@ def check_targets():
     now_str = datetime.now().strftime("%d/%m/%Y alle %H:%M")
     updated = False
 
-    # ==========================================
     # TARGET 1: LUM JOB PLACEMENT
-    # ==========================================
     print(f"[*] Scansione LUM Job Placement...")
     try:
         res = requests.get(URL_LUM_JOBS, headers=HEADERS, timeout=15)
@@ -77,9 +75,7 @@ def check_targets():
     except Exception as e:
         print(f"[!] Errore LUM Job Placement: {e}")
 
-    # ==========================================
     # TARGET 2: UNIBA ALTA FORMAZIONE
-    # ==========================================
     print(f"[*] Scansione UniBa Alta Formazione...")
     try:
         res = requests.get(URL_UNIBA, headers=HEADERS, timeout=15)
