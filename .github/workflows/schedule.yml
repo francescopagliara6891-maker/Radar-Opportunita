@@ -2,14 +2,16 @@ name: Radar Opportunita Bot
 
 on:
   schedule:
-    - cron: '0 */3 * * *' # Esegue ogni 3 ore
-  workflow_dispatch: # Permette di avviarlo manualmente
+    - cron: '0 */3 * * *'
+  workflow_dispatch:
+
+# Variabile globale per zittire l'avviso di Node.js 20
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   run-bot:
     runs-on: ubuntu-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     permissions:
       contents: write
 
