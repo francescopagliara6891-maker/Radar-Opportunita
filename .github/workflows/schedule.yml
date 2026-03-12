@@ -8,8 +8,10 @@ on:
 jobs:
   run-bot:
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     permissions:
-      contents: write # Fondamentale per salvare il file history_radar.json
+      contents: write
 
     steps:
     - name: Checkout del codice
