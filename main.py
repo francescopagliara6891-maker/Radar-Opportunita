@@ -4,7 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 import sys
 from datetime import datetime
-import pytz
+import pytz 
 
 # --- CONFIGURAZIONE ---
 HISTORY_FILE = "history_radar.json"
@@ -35,13 +35,13 @@ def load_history():
             with open(HISTORY_FILE, "r") as f:
                 data = json.load(f)
                 # Assicuriamoci che tutte le chiavi esistano
-                for key in ["lum_master", "lum_jobs", "uniba", "regione_puglia"]:
+                for key in ["lum_jobs", "uniba", "regione_puglia"]:
                     if key not in data:
                         data[key] = []
                 return data
         except:
             pass
-    return {"lum_master": [], "lum_jobs": [], "uniba": [], "regione_puglia": []}
+    return {"lum_jobs": [], "uniba": [], "regione_puglia": []}
 
 def save_history(data):
     with open(HISTORY_FILE, "w") as f:
@@ -50,7 +50,7 @@ def save_history(data):
 def check_targets():
     history = load_history()
     
-    # Gestione Fuso Orario (Importato dal tuo LUM Sniper)
+    # Gestione Fuso Orario corretto per GitHub Actions (UTC -> Roma)
     utc_now = datetime.now(pytz.utc) 
     rome_tz = pytz.timezone('Europe/Rome') 
     rome_now = utc_now.astimezone(rome_tz) 
@@ -58,28 +58,7 @@ def check_targets():
     
     updated = False
 
-    # 1. TARGET LUM MASTER (Adattato dal tuo LUM Sniper)
-    print("[*] Scansione LUM Master...")
-    try:
-        res = requests.get("https://management.lum.it/bandi-e-avvisi/", headers=HEADERS, timeout=15)
-        soup = BeautifulSoup(res.text, 'html.parser')
-        
-        # Cerchiamo i link diretti per evitare la risalita del DOM
-        links = soup.find_all('a', href=True)
-        for a in links:
-            href = a['href'].strip()
-            text = a.get_text(strip=True)
-            
-            if "master" in href.lower() or "executive" in href.lower():
-                if href not in history["lum_master"]:
-                    msg = f"🎯 <b>[LUM] NUOVO MASTER RILEVATO!</b>\n\n📝 <b>{text}</b>\n🔗 <a href='{href}'>Vai al bando</a>\n\n<i>Rilevato il: {now_str}</i>"
-                    send_telegram_alert(msg)
-                    history["lum_master"].append(href)
-                    updated = True
-    except Exception as e:
-        print(f"[!] Errore LUM Master: {e}")
-
-    # 2. TARGET LUM JOBS (Dal tuo Radar Opportunità)
+    # 1. TARGET LUM JOBS (Il tuo originale)
     print("[*] Scansione LUM Job Placement...")
     try:
         res = requests.get("https://www.lum.it/job-opportunities/", headers=HEADERS, timeout=15)
@@ -103,7 +82,7 @@ def check_targets():
     except Exception as e:
         print(f"[!] Errore LUM Job Placement: {e}")
 
-    # 3. TARGET UNIBA ALTA FORMAZIONE (Dal tuo Radar Opportunità)
+    # 2. TARGET UNIBA ALTA FORMAZIONE (Aggiornato con "short master")
     print("[*] Scansione UniBa Alta Formazione...")
     try:
         res = requests.get("https://www.uniba.it/it/didattica/corsi-universitari-di-formazione-finalizzata/corsi-e-progetti-di-alta-formazione", headers=HEADERS, timeout=15)
@@ -130,13 +109,12 @@ def check_targets():
     except Exception as e:
         print(f"[!] Errore UniBa: {e}")
 
-    # 4. TARGET REGIONE PUGLIA (Nuovo - Pass Laureati / Borse)
-    print("[*] Scansione Regione Puglia (Bandi)...")
+    # 3. TARGET REGIONE PUGLIA
+    print("[*] Scansione Regione Puglia (Bandi e Formazione)...")
     try:
         res = requests.get("https://por.regione.puglia.it/it/bandi", headers=HEADERS, timeout=15)
         soup = BeautifulSoup(res.text, 'html.parser')
         
-        # Cerca link generici ai bandi
         links = soup.find_all('a', href=True)
         keywords_regione = ["pass laureati", "alta formazione", "ritorno al futuro", "master"]
         
@@ -160,9 +138,9 @@ def check_targets():
 
     if updated:
         save_history(history)
-        print("[*] Database aggiornato.")
+        print("[*] Database radar aggiornato.")
     else:
-        print("[*] Nessuna variazione rilevata nei bersagli.")
+        print("[*] Nessuna variazione rilevata nei 3 bersagli.")
 
 if __name__ == "__main__":
     check_targets()
