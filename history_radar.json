@@ -65,10 +65,13 @@
         "https://www.lum.it/wp-content/uploads/2026/07/RIF-99-AMMINISTRAZIONE-EVENTI-SOCIETARI.pdf",
         "https://www.lum.it/wp-content/uploads/2026/07/RIF-100-AMMINISTRAZIONE-E-CONTABILITA.pdf",
         "https://www.lum.it/wp-content/uploads/2026/07/RIF-101-RAGIONERIA.pdf",
-        "https://www.lum.it/wp-content/uploads/2026/07/RIF-102-ADDETTO-AMMINISTRATIVO.pdf"
+        "https://www.lum.it/wp-content/uploads/2026/07/RIF-102-ADDETTO-AMMINISTRATIVO.pdf",
+        "https://www.lum.it/wp-content/uploads/2026/08/RIF-104-RISORSE-UMANE.pdf",
+        "https://www.lum.it/wp-content/uploads/2026/08/RIF-105-JUNIOR-RISORSE-UMANE.pdf"
     ],
     "uniba": [
         "https://www.uniba.it/it/internazionale/eche-2021-2027",
         "https://www.uniba.it/it/didattica/corsi-universitari-di-formazione-finalizzata/corsi-e-progetti-di-alta-formazione/corsi-di-alta-formazione-a-a-2026-2027"
-    ]
+    ],
+    "regione_puglia": []
 }
